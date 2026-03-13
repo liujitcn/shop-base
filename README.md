@@ -1,117 +1,83 @@
-# shop-admin
+# shop-base
 
-商城管理端项目，包含 Go 后端与 Vue3 前端：
+`shop-base` 包含两部分：
 
-- `server`：Kratos + Wire + Buf + GORM
-- `web`：Vite + Vue3 + Element Plus
+- `server`：Proto、Go 服务端代码与生成脚本。
+- `web`：基于 Proto 生成的 TypeScript 类型包（npm 包：`@liujitcn/shop-base`）。
 
 ## 目录结构
 
 ```text
-shop-admin/
-├── server/
-│   ├── api/                      # proto 与 buf 生成配置
-│   ├── cmd/server/               # 后端启动入口（含 wire、静态资源嵌入）
-│   │   └── assets/
-│   │       ├── openapi.yaml
-│   │       └── web/              # 前端打包产物（由 web 构建输出）
-│   ├── configs/                  # 后端配置
-│   ├── internal/                 # 业务代码
+shop-base/
+├── server/                 # 服务端与 proto 生成入口
+│   ├── api/
 │   └── Makefile
-├── web/                          # 前端工程
-└── README.md
+└── web/                    # TS 类型包
+    ├── src/
+    ├── dist/
+    └── package.json
 ```
 
-## 环境要求
+## 常用命令（server）
 
-- Go `>= 1.26`（见 `server/go.mod`）
-- Node.js `>= 18`
-- pnpm
-- MySQL、Redis 等依赖（可用 `server/Makefile` 的 `compose-up` 启动）
-
-## 快速开始
-
-### 1. 启动依赖服务（可选）
+在 `server` 目录执行：
 
 ```bash
 cd server
-make compose-up
 ```
 
-### 2. 启动后端
+安装生成工具：
 
 ```bash
-cd server
-go mod tidy
-make wire
-go run ./cmd/server -conf ./configs
+make init
 ```
 
-默认端口（见 `server/configs/server.yaml`）：
+生成 Go 代码：
 
-- HTTP: `8091`
-- gRPC: `6001`
+```bash
+make api
+```
 
-访问地址：
+生成 OpenAPI 文档：
 
-- 管理页面：`http://localhost:8091/`（或 `http://localhost:8091/web/`）
-- Swagger 文档：`http://localhost:8091/docs/`
+```bash
+make openapi
+```
 
-### 3. 启动前端开发模式
+生成 TypeScript 代码（输出到 `../web/src/rpc`）：
+
+```bash
+make ts
+```
+
+## web 包构建
+
+在 `web` 目录执行：
 
 ```bash
 cd web
 pnpm install
-pnpm dev
+pnpm run build
 ```
 
-## 前端打包并嵌入后端
+产物输出到 `web/dist`。
 
-当前前端构建输出目录已固定为：
+## 发布到 npm（公开包）
 
-- `server/cmd/server/assets/web`
+当前包名：
 
-执行：
+```text
+@liujitcn/shop-base
+```
+
+发布命令：
 
 ```bash
 cd web
-pnpm build-only
+npm publish --access public --otp=<6位验证码>
 ```
 
-后端通过 `embed` 提供静态资源（`server/cmd/server/assets/assets.go`）：
+说明：
 
-- `//go:embed all:web/*`
-
-说明：使用 `all:web/*` 是为了包含以下划线 `_` 开头的资源文件，避免运行时 404。
-
-## 常用命令
-
-### server
-
-```bash
-cd server
-make init        # 安装开发工具
-make api         # 生成 Go proto/grpc/http/error
-make openapi     # 生成 OpenAPI 文档
-make ts          # 生成 TS proto
-make wire        # 生成 wire 注入代码
-make test        # go test ./...
-make run         # 生成 API+OpenAPI 后启动服务
-```
-
-### web
-
-```bash
-cd web
-pnpm dev
-pnpm build
-pnpm build-only
-```
-
-## 开发联动建议
-
-1. 修改 `server/api/protos/**` 后执行：`make api && make openapi && make ts`
-2. 修改依赖注入构造函数或 ProviderSet 后执行：`make wire`
-3. 前端页面需要由后端托管时执行：`pnpm build-only`
-4. 提交前建议至少执行：`cd server && go test ./...`
-
+- 若 npm 开启了 2FA，发布时需要 `--otp`。
+- 每次发布前请先更新 `web/package.json` 的 `version`，避免版本重复发布失败。

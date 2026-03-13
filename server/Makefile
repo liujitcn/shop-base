@@ -1,23 +1,11 @@
-# Not Support Windows
+.PHONY: help init plugin cli api openapi ts tag
 
-.PHONY: help wire gen ent build api openapi init all vendor dep test cover vet lint docker
-
-ifeq ($(OS),Windows_NT)
-    IS_WINDOWS := 1
-endif
-
-CURRENT_DIR	:= $(patsubst %/,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
-ROOT_DIR	:= $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
-
-SRCS_MK		:= $(foreach dir, app, $(wildcard $(dir)/*/*/Makefile))
-
-
-# initialize develop environment
+# 初始化开发环境
 init: plugin cli
 
-# install protoc plugin
+# 安装 protoc 插件
 plugin:
-	# go
+	# Go 相关插件
 	@go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 	@go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
 	@go install github.com/go-kratos/kratos/cmd/protoc-gen-go-http/v2@latest
@@ -27,7 +15,7 @@ plugin:
 	@go install github.com/menta2k/protoc-gen-redact/v3@latest
 	@go install github.com/go-kratos/protoc-gen-typescript-http@latest
 
-# install cli tools
+# 安装 CLI 工具
 cli:
 	@go install github.com/go-kratos/kratos/cmd/kratos/v2@latest
 	@go install github.com/google/gnostic@latest
@@ -35,63 +23,32 @@ cli:
 	@go install entgo.io/ent/cmd/ent@latest
 	@go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
 
-# use docker compose to run backend services and all its dependency services like redis, mysql, etc.
-compose-up:
-	@docker compose up -d --force-recreate
-
-compose-down:
-	@docker compose down
-
-# download dependencies of module
-dep:
-	@go mod download
-
-# create vendor
-vendor:
-	@go mod vendor
-
-# run tests
-test:
-	@go test ./...
-
-# run coverage tests
-cover:
-	@go test -v ./... -coverprofile=coverage.out
-
-# run static analysis
-vet:
-	@go vet
-
-# run lint
-lint:
-	@golangci-lint run
-
-# generate wire code
-wire:
-	@cd cmd/server && \
-	wire
-
-# generate protobuf api go code
+# 生成 Protobuf 的 Go 代码
 api:
 	@cd api && \
 	buf generate
 
-# generate OpenAPI v3 docs.
+# 生成 OpenAPI v3 文档
 openapi:
 	@cd api && \
 	buf generate --template buf.openapi.gen.yaml --exclude-path protos/conf
 
-# generate typescript.
+# 生成 TypeScript 代码
 ts:
 	@cd api && \
 	buf generate --template buf.typescript.gen.yaml --exclude-path protos/conf
 
 
-# run application
+# 运行应用
 run: api openapi
 	@go run ./cmd/server -conf ./configs
 
-# show help
+
+# 统一打 tag：默认扫描根目录及子目录的 go.mod；可通过 MODULE=auth 指定起始目录递归扫描（不提交代码）
+tag:
+	@python3 scripts/tag_release.py $(if $(MODULE),--path $(MODULE),)
+
+# 显示帮助信息
 help:
 	@echo ""
 	@echo "Usage:"
