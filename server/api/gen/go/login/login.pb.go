@@ -76,144 +76,6 @@ func (x *CaptchaResponse) GetCaptchaBase64() string {
 	return ""
 }
 
-// 用户后台登录 - 请求
-type LoginRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserName      string                 `protobuf:"bytes,1,opt,name=userName,proto3" json:"userName,omitempty"`       // 用户名，必选项。
-	Password      string                 `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`       // 用户的密码，必选项。
-	CaptchaCode   string                 `protobuf:"bytes,3,opt,name=captchaCode,proto3" json:"captchaCode,omitempty"` // 验证码
-	CaptchaId     string                 `protobuf:"bytes,4,opt,name=captchaId,proto3" json:"captchaId,omitempty"`     // 验证码Id
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *LoginRequest) Reset() {
-	*x = LoginRequest{}
-	mi := &file_login_login_proto_msgTypes[1]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *LoginRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*LoginRequest) ProtoMessage() {}
-
-func (x *LoginRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_login_login_proto_msgTypes[1]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use LoginRequest.ProtoReflect.Descriptor instead.
-func (*LoginRequest) Descriptor() ([]byte, []int) {
-	return file_login_login_proto_rawDescGZIP(), []int{1}
-}
-
-func (x *LoginRequest) GetUserName() string {
-	if x != nil {
-		return x.UserName
-	}
-	return ""
-}
-
-func (x *LoginRequest) GetPassword() string {
-	if x != nil {
-		return x.Password
-	}
-	return ""
-}
-
-func (x *LoginRequest) GetCaptchaCode() string {
-	if x != nil {
-		return x.CaptchaCode
-	}
-	return ""
-}
-
-func (x *LoginRequest) GetCaptchaId() string {
-	if x != nil {
-		return x.CaptchaId
-	}
-	return ""
-}
-
-// 用户后台登录 - 回应
-type LoginResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	AccessToken   string                 `protobuf:"bytes,1,opt,name=accessToken,proto3" json:"accessToken,omitempty"`   // 访问令牌，必选项。
-	RefreshToken  string                 `protobuf:"bytes,2,opt,name=refreshToken,proto3" json:"refreshToken,omitempty"` // 更新令牌，用来获取下一次的访问令牌，可选项。
-	TokenType     string                 `protobuf:"bytes,3,opt,name=tokenType,proto3" json:"tokenType,omitempty"`       // 令牌类型，该值大小写不敏感，必选项，可以是bearer类型或mac类型。
-	ExpiresIn     int64                  `protobuf:"varint,4,opt,name=expiresIn,proto3" json:"expiresIn,omitempty"`      // 令牌有效时间，单位为秒。如果访问令牌过期，服务器应回复授予访问令牌的持续时间。如果省略该参数，必须其他方式设置过期时间。
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *LoginResponse) Reset() {
-	*x = LoginResponse{}
-	mi := &file_login_login_proto_msgTypes[2]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *LoginResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*LoginResponse) ProtoMessage() {}
-
-func (x *LoginResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_login_login_proto_msgTypes[2]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use LoginResponse.ProtoReflect.Descriptor instead.
-func (*LoginResponse) Descriptor() ([]byte, []int) {
-	return file_login_login_proto_rawDescGZIP(), []int{2}
-}
-
-func (x *LoginResponse) GetAccessToken() string {
-	if x != nil {
-		return x.AccessToken
-	}
-	return ""
-}
-
-func (x *LoginResponse) GetRefreshToken() string {
-	if x != nil {
-		return x.RefreshToken
-	}
-	return ""
-}
-
-func (x *LoginResponse) GetTokenType() string {
-	if x != nil {
-		return x.TokenType
-	}
-	return ""
-}
-
-func (x *LoginResponse) GetExpiresIn() int64 {
-	if x != nil {
-		return x.ExpiresIn
-	}
-	return 0
-}
-
 // 用户刷新令牌 - 请求
 type RefreshTokenRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -224,7 +86,7 @@ type RefreshTokenRequest struct {
 
 func (x *RefreshTokenRequest) Reset() {
 	*x = RefreshTokenRequest{}
-	mi := &file_login_login_proto_msgTypes[3]
+	mi := &file_login_login_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -236,7 +98,7 @@ func (x *RefreshTokenRequest) String() string {
 func (*RefreshTokenRequest) ProtoMessage() {}
 
 func (x *RefreshTokenRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_login_login_proto_msgTypes[3]
+	mi := &file_login_login_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -249,7 +111,7 @@ func (x *RefreshTokenRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RefreshTokenRequest.ProtoReflect.Descriptor instead.
 func (*RefreshTokenRequest) Descriptor() ([]byte, []int) {
-	return file_login_login_proto_rawDescGZIP(), []int{3}
+	return file_login_login_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *RefreshTokenRequest) GetRefreshToken() string {
@@ -259,6 +121,75 @@ func (x *RefreshTokenRequest) GetRefreshToken() string {
 	return ""
 }
 
+// 用户刷新令牌 - 回应
+type RefreshTokenResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	AccessToken   string                 `protobuf:"bytes,1,opt,name=accessToken,proto3" json:"accessToken,omitempty"`   // 访问令牌，必选项。
+	RefreshToken  string                 `protobuf:"bytes,2,opt,name=refreshToken,proto3" json:"refreshToken,omitempty"` // 更新令牌，用来获取下一次的访问令牌，可选项。
+	TokenType     string                 `protobuf:"bytes,3,opt,name=tokenType,proto3" json:"tokenType,omitempty"`       // 令牌类型，该值大小写不敏感，必选项，可以是bearer类型或mac类型。
+	ExpiresIn     int64                  `protobuf:"varint,4,opt,name=expiresIn,proto3" json:"expiresIn,omitempty"`      // 令牌有效时间，单位为秒。如果访问令牌过期，服务器应回复授予访问令牌的持续时间。如果省略该参数，必须其他方式设置过期时间。
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RefreshTokenResponse) Reset() {
+	*x = RefreshTokenResponse{}
+	mi := &file_login_login_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RefreshTokenResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RefreshTokenResponse) ProtoMessage() {}
+
+func (x *RefreshTokenResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_login_login_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RefreshTokenResponse.ProtoReflect.Descriptor instead.
+func (*RefreshTokenResponse) Descriptor() ([]byte, []int) {
+	return file_login_login_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *RefreshTokenResponse) GetAccessToken() string {
+	if x != nil {
+		return x.AccessToken
+	}
+	return ""
+}
+
+func (x *RefreshTokenResponse) GetRefreshToken() string {
+	if x != nil {
+		return x.RefreshToken
+	}
+	return ""
+}
+
+func (x *RefreshTokenResponse) GetTokenType() string {
+	if x != nil {
+		return x.TokenType
+	}
+	return ""
+}
+
+func (x *RefreshTokenResponse) GetExpiresIn() int64 {
+	if x != nil {
+		return x.ExpiresIn
+	}
+	return 0
+}
+
 var File_login_login_proto protoreflect.FileDescriptor
 
 const file_login_login_proto_rawDesc = "" +
@@ -266,23 +197,18 @@ const file_login_login_proto_rawDesc = "" +
 	"\x11login/login.proto\x12\x05login\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\"\x7f\n" +
 	"\x0fCaptchaResponse\x12/\n" +
 	"\tcaptchaId\x18\x01 \x01(\tB\x11\xbaG\x0e\x92\x02\v验证码IDR\tcaptchaId\x12;\n" +
-	"\rcaptchaBase64\x18\x02 \x01(\tB\x15\xbaG\x12\x92\x02\x0f验证码base64R\rcaptchaBase64\"\xcf\x01\n" +
-	"\fLoginRequest\x12+\n" +
-	"\buserName\x18\x01 \x01(\tB\x0f\xbaG\f\x92\x02\t用户名R\buserName\x12.\n" +
-	"\bpassword\x18\x02 \x01(\tB\x12\xbaG\x0f\x92\x02\f用户密码R\bpassword\x121\n" +
-	"\vcaptchaCode\x18\x03 \x01(\tB\x0f\xbaG\f\x92\x02\t验证码R\vcaptchaCode\x12/\n" +
-	"\tcaptchaId\x18\x04 \x01(\tB\x11\xbaG\x0e\x92\x02\v验证码IdR\tcaptchaId\"\xd6\x06\n" +
-	"\rLoginResponse\x12s\n" +
+	"\rcaptchaBase64\x18\x02 \x01(\tB\x15\xbaG\x12\x92\x02\x0f验证码base64R\rcaptchaBase64\"\xd3\x02\n" +
+	"\x13RefreshTokenRequest\x12\xbb\x02\n" +
+	"\frefreshToken\x18\x01 \x01(\tB\x96\x02\xbaG\x92\x02\x92\x02\x8e\x02更新令牌，用来获取下一次的访问令牌，可选项。如果访问令牌将过期，则返回刷新令牌很有用，应用程序可以使用该刷新令牌来获取另一个访问令牌。但是，通过隐式授予颁发的令牌不能颁发刷新令牌。R\frefreshToken\"\xdd\x06\n" +
+	"\x14RefreshTokenResponse\x12s\n" +
 	"\vaccessToken\x18\x01 \x01(\tBQ\xbaGN\x92\x02K访问令牌，必选项。授权服务器颁发的访问令牌字符串。R\vaccessToken\x12\xbb\x02\n" +
 	"\frefreshToken\x18\x02 \x01(\tB\x96\x02\xbaG\x92\x02\x92\x02\x8e\x02更新令牌，用来获取下一次的访问令牌，可选项。如果访问令牌将过期，则返回刷新令牌很有用，应用程序可以使用该刷新令牌来获取另一个访问令牌。但是，通过隐式授予颁发的令牌不能颁发刷新令牌。R\frefreshToken\x12\xb3\x01\n" +
 	"\ttokenType\x18\x03 \x01(\tB\x94\x01\xbaG\x90\x01\x8a\x02\b\x1a\x06Bearer\x92\x02\x81\x01令牌的类型，该值大小写不敏感，必选项，可以是bearer类型或mac类型，通常只是字符串“Bearer”。R\ttokenType\x12\xdb\x01\n" +
-	"\texpiresIn\x18\x04 \x01(\x03B\xbc\x01\xbaG\xb8\x01\x92\x02\xb4\x01令牌有效时间，单位为秒。如果访问令牌过期，服务器应回复授予访问令牌的持续时间。如果省略该参数，必须其他方式设置过期时间。R\texpiresIn\"\xd3\x02\n" +
-	"\x13RefreshTokenRequest\x12\xbb\x02\n" +
-	"\frefreshToken\x18\x01 \x01(\tB\x96\x02\xbaG\x92\x02\x92\x02\x8e\x02更新令牌，用来获取下一次的访问令牌，可选项。如果访问令牌将过期，则返回刷新令牌很有用，应用程序可以使用该刷新令牌来获取另一个访问令牌。但是，通过隐式授予颁发的令牌不能颁发刷新令牌。R\frefreshToken2\xa0\x02\n" +
+	"\texpiresIn\x18\x04 \x01(\x03B\xbc\x01\xbaG\xb8\x01\x92\x02\xb4\x01令牌有效时间，单位为秒。如果访问令牌过期，服务器应回复授予访问令牌的持续时间。如果省略该参数，必须其他方式设置过期时间。R\texpiresIn2\xa7\x02\n" +
 	"\fLoginService\x12U\n" +
 	"\aCaptcha\x12\x16.google.protobuf.Empty\x1a\x16.login.CaptchaResponse\"\x1a\x82\xd3\xe4\x93\x02\x14\x12\x12/api/login/captcha\x12S\n" +
-	"\x06Logout\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.Empty\"\x19\x82\xd3\xe4\x93\x02\x13*\x11/api/login/logout\x12d\n" +
-	"\fRefreshToken\x12\x1a.login.RefreshTokenRequest\x1a\x14.login.LoginResponse\"\"\x82\xd3\xe4\x93\x02\x1c:\x01*\"\x17/api/login/refreshTokenB\x82\x01\n" +
+	"\x06Logout\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.Empty\"\x19\x82\xd3\xe4\x93\x02\x13*\x11/api/login/logout\x12k\n" +
+	"\fRefreshToken\x12\x1a.login.RefreshTokenRequest\x1a\x1b.login.RefreshTokenResponse\"\"\x82\xd3\xe4\x93\x02\x1c:\x01*\"\x17/api/login/refreshTokenB\x82\x01\n" +
 	"\tcom.loginB\n" +
 	"LoginProtoP\x01Z5github.com/liujitcn/shop-base/server/api/gen/go/login\xa2\x02\x03LXX\xaa\x02\x05Login\xca\x02\x05Login\xe2\x02\x11Login\\GPBMetadata\xea\x02\x05Loginb\x06proto3"
 
@@ -298,21 +224,20 @@ func file_login_login_proto_rawDescGZIP() []byte {
 	return file_login_login_proto_rawDescData
 }
 
-var file_login_login_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_login_login_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_login_login_proto_goTypes = []any{
-	(*CaptchaResponse)(nil),     // 0: login.CaptchaResponse
-	(*LoginRequest)(nil),        // 1: login.LoginRequest
-	(*LoginResponse)(nil),       // 2: login.LoginResponse
-	(*RefreshTokenRequest)(nil), // 3: login.RefreshTokenRequest
-	(*emptypb.Empty)(nil),       // 4: google.protobuf.Empty
+	(*CaptchaResponse)(nil),      // 0: login.CaptchaResponse
+	(*RefreshTokenRequest)(nil),  // 1: login.RefreshTokenRequest
+	(*RefreshTokenResponse)(nil), // 2: login.RefreshTokenResponse
+	(*emptypb.Empty)(nil),        // 3: google.protobuf.Empty
 }
 var file_login_login_proto_depIdxs = []int32{
-	4, // 0: login.LoginService.Captcha:input_type -> google.protobuf.Empty
-	4, // 1: login.LoginService.Logout:input_type -> google.protobuf.Empty
-	3, // 2: login.LoginService.RefreshToken:input_type -> login.RefreshTokenRequest
+	3, // 0: login.LoginService.Captcha:input_type -> google.protobuf.Empty
+	3, // 1: login.LoginService.Logout:input_type -> google.protobuf.Empty
+	1, // 2: login.LoginService.RefreshToken:input_type -> login.RefreshTokenRequest
 	0, // 3: login.LoginService.Captcha:output_type -> login.CaptchaResponse
-	4, // 4: login.LoginService.Logout:output_type -> google.protobuf.Empty
-	2, // 5: login.LoginService.RefreshToken:output_type -> login.LoginResponse
+	3, // 4: login.LoginService.Logout:output_type -> google.protobuf.Empty
+	2, // 5: login.LoginService.RefreshToken:output_type -> login.RefreshTokenResponse
 	3, // [3:6] is the sub-list for method output_type
 	0, // [0:3] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
@@ -331,7 +256,7 @@ func file_login_login_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_login_login_proto_rawDesc), len(file_login_login_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

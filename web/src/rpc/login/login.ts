@@ -14,20 +14,14 @@ export interface CaptchaResponse {
   captchaBase64: string;
 }
 
-/** 用户后台登录 - 请求 */
-export interface LoginRequest {
-  /** 用户名，必选项。 */
-  userName: string;
-  /** 用户的密码，必选项。 */
-  password: string;
-  /** 验证码 */
-  captchaCode: string;
-  /** 验证码Id */
-  captchaId: string;
+/** 用户刷新令牌 - 请求 */
+export interface RefreshTokenRequest {
+  /** 更新令牌，用来获取下一次的访问令牌，必选项。 */
+  refreshToken: string;
 }
 
-/** 用户后台登录 - 回应 */
-export interface LoginResponse {
+/** 用户刷新令牌 - 回应 */
+export interface RefreshTokenResponse {
   /** 访问令牌，必选项。 */
   accessToken: string;
   /** 更新令牌，用来获取下一次的访问令牌，可选项。 */
@@ -38,12 +32,6 @@ export interface LoginResponse {
   expiresIn: number;
 }
 
-/** 用户刷新令牌 - 请求 */
-export interface RefreshTokenRequest {
-  /** 更新令牌，用来获取下一次的访问令牌，必选项。 */
-  refreshToken: string;
-}
-
 /** 登录公共服务 */
 export interface LoginService {
   /** 验证码 */
@@ -51,5 +39,5 @@ export interface LoginService {
   /** 登出 */
   Logout(request: Empty): Promise<Empty>;
   /** 刷新认证令牌 */
-  RefreshToken(request: RefreshTokenRequest): Promise<LoginResponse>;
+  RefreshToken(request: RefreshTokenRequest): Promise<RefreshTokenResponse>;
 }

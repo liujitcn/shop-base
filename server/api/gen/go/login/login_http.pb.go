@@ -30,7 +30,7 @@ type LoginServiceHTTPServer interface {
 	// Logout 登出
 	Logout(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
 	// RefreshToken 刷新认证令牌
-	RefreshToken(context.Context, *RefreshTokenRequest) (*LoginResponse, error)
+	RefreshToken(context.Context, *RefreshTokenRequest) (*RefreshTokenResponse, error)
 }
 
 func RegisterLoginServiceHTTPServer(s *http.Server, srv LoginServiceHTTPServer) {
@@ -95,7 +95,7 @@ func _LoginService_RefreshToken0_HTTP_Handler(srv LoginServiceHTTPServer) func(c
 		if err != nil {
 			return err
 		}
-		reply := out.(*LoginResponse)
+		reply := out.(*RefreshTokenResponse)
 		return ctx.Result(200, reply)
 	}
 }
@@ -106,7 +106,7 @@ type LoginServiceHTTPClient interface {
 	// Logout 登出
 	Logout(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	// RefreshToken 刷新认证令牌
-	RefreshToken(ctx context.Context, req *RefreshTokenRequest, opts ...http.CallOption) (rsp *LoginResponse, err error)
+	RefreshToken(ctx context.Context, req *RefreshTokenRequest, opts ...http.CallOption) (rsp *RefreshTokenResponse, err error)
 }
 
 type LoginServiceHTTPClientImpl struct {
@@ -146,8 +146,8 @@ func (c *LoginServiceHTTPClientImpl) Logout(ctx context.Context, in *emptypb.Emp
 }
 
 // RefreshToken 刷新认证令牌
-func (c *LoginServiceHTTPClientImpl) RefreshToken(ctx context.Context, in *RefreshTokenRequest, opts ...http.CallOption) (*LoginResponse, error) {
-	var out LoginResponse
+func (c *LoginServiceHTTPClientImpl) RefreshToken(ctx context.Context, in *RefreshTokenRequest, opts ...http.CallOption) (*RefreshTokenResponse, error) {
+	var out RefreshTokenResponse
 	pattern := "/api/login/refreshToken"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationLoginServiceRefreshToken))

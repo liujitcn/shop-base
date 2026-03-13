@@ -50,6 +50,12 @@ make openapi
 make ts
 ```
 
+一键生成全部接口产物（Go + OpenAPI + TypeScript）：
+
+```bash
+make gen
+```
+
 ## web 包构建
 
 在 `web` 目录执行：

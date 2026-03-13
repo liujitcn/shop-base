@@ -1,4 +1,5 @@
-.PHONY: help init plugin cli api openapi ts
+# Makefile 常用目标：初始化工具、生成代码、启动服务、打 tag
+.PHONY: help init plugin cli api openapi ts gen
 
 # 初始化开发环境
 init: plugin cli
@@ -33,16 +34,16 @@ openapi:
 	@cd api && \
 	buf generate --template buf.openapi.gen.yaml --exclude-path protos/conf
 
-# 运行应用
-run: api openapi
-	@go run ./cmd/server -conf ./configs
+# 生成 TypeScript 代码（输出到 ../web/src/rpc）
+ts:
+	@cd api && \
+	buf generate --template buf.typescript.gen.yaml --exclude-path protos/conf
 
-
-# 统一打 tag：默认扫描根目录及子目录的 go.mod；可通过 MODULE=auth 指定起始目录递归扫描（不提交代码）
-tag:
-	@python3 scripts/tag_release.py $(if $(MODULE),--path $(MODULE),)
+# 一键生成全部接口产物（Go 代码 + OpenAPI 文档 + TypeScript 代码）
+gen: api openapi ts
 
 # 显示帮助信息
+# 通过解析注释输出可用目标及说明
 help:
 	@echo ""
 	@echo "Usage:"

@@ -76,7 +76,7 @@ func (s *LoginService) Logout(ctx context.Context, req *emptypb.Empty) (*emptypb
 
 // RefreshToken
 // 刷新认证令牌
-func (s *LoginService) RefreshToken(ctx context.Context, req *login.RefreshTokenRequest) (*login.LoginResponse, error) {
+func (s *LoginService) RefreshToken(ctx context.Context, req *login.RefreshTokenRequest) (*login.RefreshTokenResponse, error) {
 	authInfo, err := auth.FromContext(ctx)
 	if err != nil {
 		log.Errorf("用户认证失败[%s]", err.Error())
@@ -98,7 +98,7 @@ func (s *LoginService) RefreshToken(ctx context.Context, req *login.RefreshToken
 	// Token 有效期
 	expiresIn := s.UserToken.GetAccessTokenExpires()
 
-	return &login.LoginResponse{
+	return &login.RefreshTokenResponse{
 		TokenType:    engine.BearerWord,
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,

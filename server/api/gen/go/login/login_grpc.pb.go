@@ -36,7 +36,7 @@ type LoginServiceClient interface {
 	// 登出
 	Logout(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// 刷新认证令牌
-	RefreshToken(ctx context.Context, in *RefreshTokenRequest, opts ...grpc.CallOption) (*LoginResponse, error)
+	RefreshToken(ctx context.Context, in *RefreshTokenRequest, opts ...grpc.CallOption) (*RefreshTokenResponse, error)
 }
 
 type loginServiceClient struct {
@@ -67,9 +67,9 @@ func (c *loginServiceClient) Logout(ctx context.Context, in *emptypb.Empty, opts
 	return out, nil
 }
 
-func (c *loginServiceClient) RefreshToken(ctx context.Context, in *RefreshTokenRequest, opts ...grpc.CallOption) (*LoginResponse, error) {
+func (c *loginServiceClient) RefreshToken(ctx context.Context, in *RefreshTokenRequest, opts ...grpc.CallOption) (*RefreshTokenResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(LoginResponse)
+	out := new(RefreshTokenResponse)
 	err := c.cc.Invoke(ctx, LoginService_RefreshToken_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -88,7 +88,7 @@ type LoginServiceServer interface {
 	// 登出
 	Logout(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
 	// 刷新认证令牌
-	RefreshToken(context.Context, *RefreshTokenRequest) (*LoginResponse, error)
+	RefreshToken(context.Context, *RefreshTokenRequest) (*RefreshTokenResponse, error)
 	mustEmbedUnimplementedLoginServiceServer()
 }
 
@@ -105,7 +105,7 @@ func (UnimplementedLoginServiceServer) Captcha(context.Context, *emptypb.Empty) 
 func (UnimplementedLoginServiceServer) Logout(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Logout not implemented")
 }
-func (UnimplementedLoginServiceServer) RefreshToken(context.Context, *RefreshTokenRequest) (*LoginResponse, error) {
+func (UnimplementedLoginServiceServer) RefreshToken(context.Context, *RefreshTokenRequest) (*RefreshTokenResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method RefreshToken not implemented")
 }
 func (UnimplementedLoginServiceServer) mustEmbedUnimplementedLoginServiceServer() {}
