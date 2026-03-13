@@ -6,7 +6,6 @@ import (
 
 // ProviderSet is server providers.
 var ProviderSet = wire.NewSet(
-	ParseAuthnJwt,
 	ParseOss,
 	ParseData,
 	ParseDatabase,

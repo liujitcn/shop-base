@@ -1,4 +1,4 @@
-.PHONY: help init plugin cli api openapi ts tag
+.PHONY: help init plugin cli api openapi ts
 
 # 初始化开发环境
 init: plugin cli
@@ -32,12 +32,6 @@ api:
 openapi:
 	@cd api && \
 	buf generate --template buf.openapi.gen.yaml --exclude-path protos/conf
-
-# 生成 TypeScript 代码
-ts:
-	@cd api && \
-	buf generate --template buf.typescript.gen.yaml --exclude-path protos/conf
-
 
 # 运行应用
 run: api openapi
