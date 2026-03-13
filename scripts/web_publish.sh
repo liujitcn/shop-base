@@ -15,8 +15,7 @@ usage() {
 说明:
   1. 读取 npm 上当前包的最新版本。
   2. 自动将 patch 版本号 +1 写入 web/package.json。
-  3. 自动提交版本变更。
-  4. 执行 build 并发布 npm 公开包。
+  3. 执行 build 并发布 npm 公开包。
 EOF
 }
 
@@ -40,29 +39,47 @@ if ! command -v npm >/dev/null 2>&1; then
   exit 1
 fi
 
-if ! command -v git >/dev/null 2>&1; then
-  echo "错误: 未安装 git。" >&2
-  exit 1
-fi
-
 PKG_NAME="$(node -p "require('${WEB_DIR}/package.json').name")"
 LOCAL_VERSION="$(node -p "require('${WEB_DIR}/package.json').version")"
 NPM_VERSION="$(npm view "${PKG_NAME}" version 2>/dev/null || true)"
 
-BASE_VERSION="${NPM_VERSION:-$LOCAL_VERSION}"
-
 NEXT_VERSION="$(node -e '
-const v = process.argv[1];
-const m = /^(\d+)\.(\d+)\.(\d+)$/.exec(v);
-if (!m) {
-  console.error(`非法语义化版本: ${v}`);
-  process.exit(1);
+const localVersion = process.argv[1];
+const npmVersion = process.argv[2];
+
+function parseSemver(v) {
+  const m = /^(\d+)\.(\d+)\.(\d+)$/.exec(v || "");
+  if (!m) return null;
+  return [Number(m[1]), Number(m[2]), Number(m[3])];
 }
-const major = Number(m[1]);
-const minor = Number(m[2]);
-const patch = Number(m[3]) + 1;
+
+function compare(a, b) {
+  for (let i = 0; i < 3; i += 1) {
+    if (a[i] > b[i]) return 1;
+    if (a[i] < b[i]) return -1;
+  }
+  return 0;
+}
+
+const npm = parseSemver(npmVersion);
+if (!npm) {
+  const local = parseSemver(localVersion);
+  if (!local) {
+    console.error(`非法本地语义化版本: ${localVersion}`);
+    process.exit(1);
+  }
+  const major = local[0];
+  const minor = local[1];
+  const patch = local[2] + 1;
+  process.stdout.write(`${major}.${minor}.${patch}`);
+  process.exit(0);
+}
+
+const major = npm[0];
+const minor = npm[1];
+const patch = npm[2] + 1;
 process.stdout.write(`${major}.${minor}.${patch}`);
-' "${BASE_VERSION}")"
+' "${LOCAL_VERSION}" "${NPM_VERSION}")"
 
 echo "包名: ${PKG_NAME}"
 echo "本地版本: ${LOCAL_VERSION}"
@@ -71,23 +88,11 @@ echo "即将更新为: ${NEXT_VERSION}"
 
 cd "${WEB_DIR}"
 
-npm version "${NEXT_VERSION}" --no-git-tag-version
-
-echo "更新后版本: $(node -p "require('./package.json').version")"
-
-cd "${ROOT_DIR}"
-git add web/package.json
-if git diff --cached --quiet; then
-  echo "提示: 未检测到可提交的版本变更。"
+if [[ "${LOCAL_VERSION}" == "${NEXT_VERSION}" ]]; then
+  echo "本地版本已是目标版本，无需修改版本号。"
 else
-  git commit -m "升级 web 发布版本到 v${NEXT_VERSION}"
-  CURRENT_BRANCH="$(git branch --show-current)"
-  if [[ -z "${CURRENT_BRANCH}" ]]; then
-    echo "错误: 无法识别当前分支，无法推送。" >&2
-    exit 1
-  fi
-  git push origin "${CURRENT_BRANCH}"
-  echo "已提交并推送到远程分支: ${CURRENT_BRANCH}"
+  npm version "${NEXT_VERSION}" --no-git-tag-version
+  echo "更新后版本: $(node -p "require('./package.json').version")"
 fi
 
 cd "${WEB_DIR}"

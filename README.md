@@ -83,7 +83,7 @@ cd web
 npm publish --access public --otp=<6位验证码>
 ```
 
-也可以在仓库根目录一键执行自动发布流程（自动升 patch 版本、提交、推送、构建并发布）：
+也可以在仓库根目录一键执行自动发布流程（自动升 patch 版本、构建并发布）：
 
 ```bash
 make web-publish
