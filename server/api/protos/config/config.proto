@@ -5,8 +5,6 @@ package config;
 import "gnostic/openapi/v3/annotations.proto";
 import "google/api/annotations.proto";
 
-import "common/enum.proto";
-
 // 系统配置公共服务
 service ConfigService {
   // 获取系统配置
@@ -18,7 +16,7 @@ service ConfigService {
 }
 
 message ConfigRequest {
-  common.BaseConfigSite site = 2 [
+  BaseConfigSite site = 2 [
     (gnostic.openapi.v3.property) = {description: "位置：枚举【BaseConfigSite】"}
   ];  // 位置：枚举【BaseConfigSite】
 }
@@ -39,4 +37,12 @@ message ConfigResponse {
       description: "系统配置"
     }
   ]; // 系统配置
+}
+
+// 系统配置位置
+enum BaseConfigSite{
+  UNKNOWN_BCS = 0;
+  SYSTEM = 1; // 系统内使用
+  ADMIN = 2; // 管理端
+  APP = 3; // 移动端
 }

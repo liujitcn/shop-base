@@ -5,7 +5,17 @@
 // source: config/config.proto
 
 /* eslint-disable */
-import { type BaseConfigSite } from "../common/enum";
+
+/** 系统配置位置 */
+export enum BaseConfigSite {
+  UNKNOWN_BCS = 0,
+  /** SYSTEM - 系统内使用 */
+  SYSTEM = 1,
+  /** ADMIN - 管理端 */
+  ADMIN = 2,
+  /** APP - 移动端 */
+  APP = 3,
+}
 
 export interface ConfigRequest {
   /** 位置：枚举【BaseConfigSite】 */

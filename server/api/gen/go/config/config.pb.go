@@ -8,7 +8,6 @@ package config
 
 import (
 	_ "github.com/google/gnostic/openapiv3"
-	common "github.com/liujitcn/shop-base/server/api/gen/go/common"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -24,9 +23,62 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// 系统配置位置
+type BaseConfigSite int32
+
+const (
+	BaseConfigSite_UNKNOWN_BCS BaseConfigSite = 0
+	BaseConfigSite_SYSTEM      BaseConfigSite = 1 // 系统内使用
+	BaseConfigSite_ADMIN       BaseConfigSite = 2 // 管理端
+	BaseConfigSite_APP         BaseConfigSite = 3 // 移动端
+)
+
+// Enum value maps for BaseConfigSite.
+var (
+	BaseConfigSite_name = map[int32]string{
+		0: "UNKNOWN_BCS",
+		1: "SYSTEM",
+		2: "ADMIN",
+		3: "APP",
+	}
+	BaseConfigSite_value = map[string]int32{
+		"UNKNOWN_BCS": 0,
+		"SYSTEM":      1,
+		"ADMIN":       2,
+		"APP":         3,
+	}
+)
+
+func (x BaseConfigSite) Enum() *BaseConfigSite {
+	p := new(BaseConfigSite)
+	*p = x
+	return p
+}
+
+func (x BaseConfigSite) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (BaseConfigSite) Descriptor() protoreflect.EnumDescriptor {
+	return file_config_config_proto_enumTypes[0].Descriptor()
+}
+
+func (BaseConfigSite) Type() protoreflect.EnumType {
+	return &file_config_config_proto_enumTypes[0]
+}
+
+func (x BaseConfigSite) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use BaseConfigSite.Descriptor instead.
+func (BaseConfigSite) EnumDescriptor() ([]byte, []int) {
+	return file_config_config_proto_rawDescGZIP(), []int{0}
+}
+
 type ConfigRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Site          common.BaseConfigSite  `protobuf:"varint,2,opt,name=site,proto3,enum=common.BaseConfigSite" json:"site,omitempty"` // 位置：枚举【BaseConfigSite】
+	Site          BaseConfigSite         `protobuf:"varint,2,opt,name=site,proto3,enum=config.BaseConfigSite" json:"site,omitempty"` // 位置：枚举【BaseConfigSite】
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -61,11 +113,11 @@ func (*ConfigRequest) Descriptor() ([]byte, []int) {
 	return file_config_config_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *ConfigRequest) GetSite() common.BaseConfigSite {
+func (x *ConfigRequest) GetSite() BaseConfigSite {
 	if x != nil {
 		return x.Site
 	}
-	return common.BaseConfigSite(0)
+	return BaseConfigSite_UNKNOWN_BCS
 }
 
 type ConfigResponse struct {
@@ -168,14 +220,20 @@ var File_config_config_proto protoreflect.FileDescriptor
 
 const file_config_config_proto_rawDesc = "" +
 	"\n" +
-	"\x13config/config.proto\x12\x06config\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x11common/enum.proto\"f\n" +
+	"\x13config/config.proto\x12\x06config\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1cgoogle/api/annotations.proto\"f\n" +
 	"\rConfigRequest\x12U\n" +
-	"\x04site\x18\x02 \x01(\x0e2\x16.common.BaseConfigSiteB)\xbaG&\x92\x02#位置：枚举【BaseConfigSite】R\x04site\"\xa9\x01\n" +
+	"\x04site\x18\x02 \x01(\x0e2\x16.config.BaseConfigSiteB)\xbaG&\x92\x02#位置：枚举【BaseConfigSite】R\x04site\"\xa9\x01\n" +
 	"\x0eConfigResponse\x12C\n" +
 	"\x04data\x18\x01 \x03(\v2\x1b.config.ConfigResponse.DataB\x12\xbaG\x0f\x92\x02\f系统配置R\x04data\x1aR\n" +
 	"\x04Data\x12!\n" +
 	"\x03key\x18\x01 \x01(\tB\x0f\xbaG\f\x92\x02\t配置keyR\x03key\x12'\n" +
-	"\x05value\x18\x02 \x01(\tB\x11\xbaG\x0e\x92\x02\v配置valueR\x05value2`\n" +
+	"\x05value\x18\x02 \x01(\tB\x11\xbaG\x0e\x92\x02\v配置valueR\x05value*A\n" +
+	"\x0eBaseConfigSite\x12\x0f\n" +
+	"\vUNKNOWN_BCS\x10\x00\x12\n" +
+	"\n" +
+	"\x06SYSTEM\x10\x01\x12\t\n" +
+	"\x05ADMIN\x10\x02\x12\a\n" +
+	"\x03APP\x10\x032`\n" +
 	"\rConfigService\x12O\n" +
 	"\tGetConfig\x12\x15.config.ConfigRequest\x1a\x16.config.ConfigResponse\"\x13\x82\xd3\xe4\x93\x02\r\x12\v/api/configB\x89\x01\n" +
 	"\n" +
@@ -193,18 +251,19 @@ func file_config_config_proto_rawDescGZIP() []byte {
 	return file_config_config_proto_rawDescData
 }
 
+var file_config_config_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_config_config_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_config_config_proto_goTypes = []any{
-	(*ConfigRequest)(nil),       // 0: config.ConfigRequest
-	(*ConfigResponse)(nil),      // 1: config.ConfigResponse
-	(*ConfigResponse_Data)(nil), // 2: config.ConfigResponse.Data
-	(common.BaseConfigSite)(0),  // 3: common.BaseConfigSite
+	(BaseConfigSite)(0),         // 0: config.BaseConfigSite
+	(*ConfigRequest)(nil),       // 1: config.ConfigRequest
+	(*ConfigResponse)(nil),      // 2: config.ConfigResponse
+	(*ConfigResponse_Data)(nil), // 3: config.ConfigResponse.Data
 }
 var file_config_config_proto_depIdxs = []int32{
-	3, // 0: config.ConfigRequest.site:type_name -> common.BaseConfigSite
-	2, // 1: config.ConfigResponse.data:type_name -> config.ConfigResponse.Data
-	0, // 2: config.ConfigService.GetConfig:input_type -> config.ConfigRequest
-	1, // 3: config.ConfigService.GetConfig:output_type -> config.ConfigResponse
+	0, // 0: config.ConfigRequest.site:type_name -> config.BaseConfigSite
+	3, // 1: config.ConfigResponse.data:type_name -> config.ConfigResponse.Data
+	1, // 2: config.ConfigService.GetConfig:input_type -> config.ConfigRequest
+	2, // 3: config.ConfigService.GetConfig:output_type -> config.ConfigResponse
 	3, // [3:4] is the sub-list for method output_type
 	2, // [2:3] is the sub-list for method input_type
 	2, // [2:2] is the sub-list for extension type_name
@@ -222,13 +281,14 @@ func file_config_config_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_config_config_proto_rawDesc), len(file_config_config_proto_rawDesc)),
-			NumEnums:      0,
+			NumEnums:      1,
 			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
 		GoTypes:           file_config_config_proto_goTypes,
 		DependencyIndexes: file_config_config_proto_depIdxs,
+		EnumInfos:         file_config_config_proto_enumTypes,
 		MessageInfos:      file_config_config_proto_msgTypes,
 	}.Build()
 	File_config_config_proto = out.File
