@@ -1,12 +1,12 @@
-.PHONY: help tag web-pack
+.PHONY: help tag web-publish
 
 # 统一打 tag：默认扫描根目录及子目录的 go.mod；可通过 MODULE=auth 指定起始目录递归扫描（不提交代码）
 tag:
 	@python3 scripts/tag_release.py $(if $(MODULE),--path $(MODULE),)
 
-# 自动升级 web 包版本并提交推送后打包
-web-pack:
-	@./scripts/web_version_pack.sh
+# 自动升级 web 包版本并提交推送后发布 npm 公开包
+web-publish:
+	@./scripts/web_publish.sh
 
 # 显示帮助信息
 help:

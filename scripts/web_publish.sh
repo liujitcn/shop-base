@@ -10,13 +10,13 @@ WEB_DIR="${ROOT_DIR}/web"
 usage() {
   cat <<'EOF'
 用法:
-  ./scripts/web_version_pack.sh
+  ./scripts/web_publish.sh
 
 说明:
   1. 读取 npm 上当前包的最新版本。
   2. 自动将 patch 版本号 +1 写入 web/package.json。
   3. 自动提交版本变更。
-  4. 执行 build 并 npm pack。
+  4. 执行 build 并发布 npm 公开包。
 EOF
 }
 
@@ -94,6 +94,6 @@ cd "${WEB_DIR}"
 echo "开始构建..."
 npm run build
 
-echo "开始打包..."
-PACK_FILE="$(npm pack | tail -n 1)"
-echo "打包完成: ${WEB_DIR}/${PACK_FILE}"
+echo "开始发布 npm 公开包..."
+npm publish --access public
+echo "发布完成: ${PKG_NAME}@$(node -p "require('./package.json').version")"
