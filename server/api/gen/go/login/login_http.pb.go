@@ -21,12 +21,15 @@ var _ = binding.EncodeURL
 const _ = http.SupportPackageIsVersion1
 
 const OperationLoginServiceCaptcha = "/login.LoginService/Captcha"
+const OperationLoginServiceLogin = "/login.LoginService/Login"
 const OperationLoginServiceLogout = "/login.LoginService/Logout"
 const OperationLoginServiceRefreshToken = "/login.LoginService/RefreshToken"
 
 type LoginServiceHTTPServer interface {
 	// Captcha 验证码
 	Captcha(context.Context, *emptypb.Empty) (*CaptchaResponse, error)
+	// Login 登录
+	Login(context.Context, *LoginRequest) (*LoginResponse, error)
 	// Logout 登出
 	Logout(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
 	// RefreshToken 刷新认证令牌
@@ -38,6 +41,7 @@ func RegisterLoginServiceHTTPServer(s *http.Server, srv LoginServiceHTTPServer) 
 	r.GET("/api/login/captcha", _LoginService_Captcha0_HTTP_Handler(srv))
 	r.DELETE("/api/login/logout", _LoginService_Logout0_HTTP_Handler(srv))
 	r.POST("/api/login/refreshToken", _LoginService_RefreshToken0_HTTP_Handler(srv))
+	r.POST("/api/login", _LoginService_Login0_HTTP_Handler(srv))
 }
 
 func _LoginService_Captcha0_HTTP_Handler(srv LoginServiceHTTPServer) func(ctx http.Context) error {
@@ -100,9 +104,33 @@ func _LoginService_RefreshToken0_HTTP_Handler(srv LoginServiceHTTPServer) func(c
 	}
 }
 
+func _LoginService_Login0_HTTP_Handler(srv LoginServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in LoginRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationLoginServiceLogin)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.Login(ctx, req.(*LoginRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*LoginResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
 type LoginServiceHTTPClient interface {
 	// Captcha 验证码
 	Captcha(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *CaptchaResponse, err error)
+	// Login 登录
+	Login(ctx context.Context, req *LoginRequest, opts ...http.CallOption) (rsp *LoginResponse, err error)
 	// Logout 登出
 	Logout(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	// RefreshToken 刷新认证令牌
@@ -125,6 +153,20 @@ func (c *LoginServiceHTTPClientImpl) Captcha(ctx context.Context, in *emptypb.Em
 	opts = append(opts, http.Operation(OperationLoginServiceCaptcha))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// Login 登录
+func (c *LoginServiceHTTPClientImpl) Login(ctx context.Context, in *LoginRequest, opts ...http.CallOption) (*LoginResponse, error) {
+	var out LoginResponse
+	pattern := "/api/login"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationLoginServiceLogin))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

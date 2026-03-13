@@ -7,11 +7,16 @@ require (
 	github.com/google/gnostic v0.7.1
 	github.com/google/wire v0.7.0
 	github.com/liujitcn/go-utils v0.0.11
+	github.com/liujitcn/go-utils/crypto v0.0.6
+	github.com/liujitcn/go-utils/geoip v0.0.1
 	github.com/liujitcn/gorm-kit v0.0.4
 	github.com/liujitcn/kratos-kit v0.0.5
 	github.com/liujitcn/kratos-kit/api v0.0.9
 	github.com/liujitcn/kratos-kit/auth v0.0.3
 	github.com/liujitcn/kratos-kit/auth/authn v0.0.4
+	github.com/liujitcn/kratos-kit/auth/authn/engine/jwt v0.0.4
+	github.com/liujitcn/kratos-kit/auth/authz v0.0.4
+	github.com/liujitcn/kratos-kit/auth/authz/engine/casbin v0.0.4
 	github.com/liujitcn/kratos-kit/bootstrap v0.0.3
 	github.com/liujitcn/kratos-kit/cache v0.0.4
 	github.com/liujitcn/kratos-kit/captcha v0.0.1
@@ -20,6 +25,7 @@ require (
 	github.com/liujitcn/kratos-kit/pprof v0.0.1
 	github.com/liujitcn/kratos-kit/queue v0.0.4
 	github.com/liujitcn/shop-gorm-gen v0.0.5
+	github.com/mileusna/useragent v1.3.5
 	google.golang.org/genproto/googleapis/api v0.0.0-20260226221140-a57be14db171
 	google.golang.org/grpc v1.79.2
 	google.golang.org/protobuf v1.36.11
@@ -34,7 +40,10 @@ require (
 	github.com/aliyun/aliyun-oss-go-sdk v3.0.2+incompatible // indirect
 	github.com/andybalholm/brotli v1.1.1 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
+	github.com/bmatcuk/doublestar/v4 v4.6.1 // indirect
 	github.com/bsm/redislock v0.9.4 // indirect
+	github.com/casbin/casbin/v2 v2.101.0 // indirect
+	github.com/casbin/govaluate v1.2.0 // indirect
 	github.com/cenkalti/backoff/v5 v5.0.3 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/clipperhouse/displaywidth v0.6.0 // indirect
@@ -75,12 +84,12 @@ require (
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/jlaffaye/ftp v0.2.0 // indirect
-	github.com/klauspost/compress v1.18.0 // indirect
+	github.com/klauspost/compress v1.17.11 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.8 // indirect
 	github.com/lithammer/shortuuid/v4 v4.2.0 // indirect
+	github.com/liujitcn/go-utils/jwt v0.0.1 // indirect
 	github.com/liujitcn/gorm-kit/api v0.0.2 // indirect
 	github.com/liujitcn/kratos-kit/auth/authn/middleware v0.0.4 // indirect
-	github.com/liujitcn/kratos-kit/auth/authz v0.0.4 // indirect
 	github.com/liujitcn/kratos-kit/auth/authz/middleware v0.0.4 // indirect
 	github.com/liujitcn/kratos-kit/config v0.0.4 // indirect
 	github.com/liujitcn/kratos-kit/database/gorm/driver v0.0.6 // indirect

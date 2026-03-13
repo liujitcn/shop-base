@@ -12,12 +12,16 @@ import (
 	"time"
 
 	"github.com/go-kratos/kratos/v2/log"
+	"github.com/liujitcn/go-utils/crypto"
 	"github.com/liujitcn/kratos-kit/auth"
 	"github.com/liujitcn/kratos-kit/auth/authn/engine"
+	authData "github.com/liujitcn/kratos-kit/auth/data"
 	"github.com/liujitcn/kratos-kit/captcha"
 	"github.com/liujitcn/shop-base/server/api/gen/go/common"
 	"github.com/liujitcn/shop-base/server/api/gen/go/login"
 	"github.com/liujitcn/shop-base/server/core"
+	"github.com/liujitcn/shop-base/server/service/login/biz"
+	"github.com/liujitcn/shop-gorm-gen/models"
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
@@ -28,15 +32,24 @@ const _ = grpc.SupportPackageIsVersion7
 type LoginService struct {
 	login.UnimplementedLoginServiceServer
 	*core.ShopCore
+	baseUserCase *biz.BaseUserCase
+	baseRoleCase *biz.BaseRoleCase
+	baseDeptCase *biz.BaseDeptCase
 }
 
 // NewLoginService create a service implement.
 // 登录公共服务
 func NewLoginService(
 	sc *core.ShopCore,
+	baseUserCase *biz.BaseUserCase,
+	baseRoleCase *biz.BaseRoleCase,
+	baseDeptCase *biz.BaseDeptCase,
 ) *LoginService {
 	var ss = LoginService{
-		ShopCore: sc,
+		ShopCore:     sc,
+		baseUserCase: baseUserCase,
+		baseRoleCase: baseRoleCase,
+		baseDeptCase: baseDeptCase,
 	}
 
 	// 设置验证码缓存
@@ -99,6 +112,69 @@ func (s *LoginService) RefreshToken(ctx context.Context, req *login.RefreshToken
 	expiresIn := s.UserToken.GetAccessTokenExpires()
 
 	return &login.RefreshTokenResponse{
+		TokenType:    engine.BearerWord,
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
+		ExpiresIn:    expiresIn,
+	}, nil
+}
+
+// Login
+// 登录
+func (s *LoginService) Login(ctx context.Context, req *login.LoginRequest) (*login.LoginResponse, error) {
+	if req.GetCaptchaId() == "" || req.GetCaptchaCode() == "" {
+		return nil, errors.New("验证码不存在")
+	}
+	if !captcha.Verify(req.GetCaptchaId(), req.GetCaptchaCode(), true) {
+		return nil, errors.New("验证码错误")
+	}
+
+	user, err := s.baseUserCase.GetFromUserName(ctx, req.GetUserName())
+	if err != nil {
+		return nil, errors.New("用户不存在")
+	}
+	if user.Status != 1 {
+		return nil, errors.New("用户状态错误")
+	}
+	err = crypto.Verify(req.GetPassword(), user.Password)
+	if err != nil {
+		log.Errorf("verify pwd err: %s", err.Error())
+		return nil, errors.New("密码错误")
+	}
+
+	// 查询角色信息
+	var role *models.BaseRole
+	role, err = s.baseRoleCase.GetFromID(ctx, user.RoleID)
+	if err != nil {
+		return nil, errors.New("角色不存在")
+	}
+
+	// 查询部门信息
+	var dept *models.BaseDept
+	dept, err = s.baseDeptCase.GetFromID(ctx, user.DeptID)
+	if err != nil {
+		return nil, errors.New("部门不存在")
+	}
+
+	// 生成访问令牌
+	var accessToken, refreshToken string
+	accessToken, refreshToken, err = s.UserToken.GenerateToken(&authData.UserTokenPayload{
+		UserId:   user.ID,
+		UserName: user.UserName,
+		RoleId:   user.RoleID,
+		RoleCode: role.Code,
+		RoleName: role.Name,
+		DeptId:   user.DeptID,
+		DeptName: dept.Name,
+	})
+	if err != nil {
+		return nil, errors.New("登录失败")
+	}
+
+	// Token 有效期
+	expiresIn := s.UserToken.GetAccessTokenExpires()
+
+	return &login.LoginResponse{
 		TokenType:    engine.BearerWord,
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,

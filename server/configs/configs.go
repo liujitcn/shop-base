@@ -42,3 +42,14 @@ func ParsePprof(ctx *bootstrap.Context) (*bootstrapConf.Pprof, error) {
 	}
 	return cfg.GetPprof(), nil
 }
+
+func ParseAuthnJwt(ctx *bootstrap.Context) *bootstrapConf.Authentication_Jwt {
+	cfg := ctx.GetConfig()
+	if cfg == nil || cfg.GetAuthn() == nil || cfg.GetAuthn().GetJwt() == nil {
+		return &bootstrapConf.Authentication_Jwt{
+			Method: "HS256",
+			Secret: "shop-base",
+		}
+	}
+	return cfg.GetAuthn().GetJwt()
+}
