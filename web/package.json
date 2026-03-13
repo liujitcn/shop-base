@@ -1,6 +1,6 @@
 {
   "name": "@liujitcn/shop-base",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "TypeScript RPC definitions for shop-base web",
   "license": "MIT",
   "type": "commonjs",

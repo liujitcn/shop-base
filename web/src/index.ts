@@ -1,5 +1,3 @@
-export * as Common from "./rpc/common/common";
-export * as Enum from "./rpc/common/enum";
 export * as ErrorModel from "./rpc/common/error";
 export * as Config from "./rpc/config/config";
 export * as Errors from "./rpc/errors/errors";
