@@ -10,4 +10,7 @@ var ProviderSet = wire.NewSet(
 	genData.NewData,
 	genData.NewTransaction,
 	NewBaseConfigRepo,
+	NewBaseDeptRepo,
+	NewBaseRoleRepo,
+	NewBaseUserRepo,
 )
